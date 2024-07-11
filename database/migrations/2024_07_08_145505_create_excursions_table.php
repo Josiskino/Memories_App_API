@@ -13,7 +13,17 @@ return new class extends Migration
     {
         Schema::create('excursions', function (Blueprint $table) {
             $table->id();
+            $table->string('excursionName');
+            $table->text('excursionDescription');
+            $table->date('excursionDate');
+            $table->time('excursionTime');
+            $table->String('excursionPlace');
+            $table->float('excursionPrice');
+            $table->int('excursionMaxParticipants');
+            $table->boolean('status')->default(false); 
             $table->timestamps();
+            $table->softDeletes();
+            $table->foreignIdFor(Agency::class);
         });
     }
 

@@ -13,7 +13,25 @@ return new class extends Migration
     {
         Schema::create('tourists', function (Blueprint $table) {
             $table->id();
+            $table->string('touristName');
+            $table->string('touristEmail');
+            $table->string('touristPhone');
+            $table->string('touristAddress');
+            $table->string('touristCity');
+            $table->string('touristCountry');
+            $table->string('touristPostalCode')->nullable();
+            $table->string('touristPassport')->nullable();
+            $table->string('touristPassportCountry')->nullable();
+            $table->string('touristPassportDate')->nullable();
+            $table->string('touristPassportNumber')->nullable();
+            $table->string('touristPassportExpiry')->nullable();
+            $table->string('touristPassportIssue')->nullable();
+            $table->string('touristPassportPlace')->nullable();
+            $table->string('touristPassportType')->nullable();
+            $table->string('touristPassportImage')->nullable();
+            $table->boolean('status')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

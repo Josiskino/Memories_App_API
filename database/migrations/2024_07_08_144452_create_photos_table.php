@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('photos', function (Blueprint $table) {
             $table->id();
+            $table->string('photoUrl');
+            $table->morphs('photoable');
+            $table->boolean('status')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

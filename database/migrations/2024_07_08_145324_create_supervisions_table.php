@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('supervisions', function (Blueprint $table) {
             $table->id();
+            $table->date('dateSupervision');
+            $table->boolean('status')->default(false);
+            $table->foreignIdFor(Guide::class);
+            $table->foreignIdFor(Tourist::class);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -13,7 +13,15 @@ return new class extends Migration
     {
         Schema::create('guides', function (Blueprint $table) {
             $table->id();
+            $table->string('guideName');
+            $table->string('guideEmail');
+            $table->string('guidePhone');
+            $table->string('guideAddress');
+            $table->string('guideImage');
+            $table->text('guideDescription');
+            $table->boolean('status')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

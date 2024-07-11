@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('restaurants', function (Blueprint $table) {
             $table->id();
+            $table->string('restaurantName');
+            $table->string('restaurantCity');
+            //prevoir la longitude et la latitude
             $table->timestamps();
+            $table->softDeletes();
+            $table->boolean('status')->default(false);
         });
     }
 

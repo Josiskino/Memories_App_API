@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('wallets', function (Blueprint $table) {
             $table->id();
+            $table->float('balance');
+            $table->timestamp('lastReloadDate');
+            $table->foreignIdFor(Tourist::class);
+            $table->boolean('status')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

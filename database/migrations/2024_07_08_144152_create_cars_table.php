@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('cars', function (Blueprint $table) {
             $table->id();
+            $table->string('carModelName');
+            $table->foreignIdFor(Renter::class);
             $table->timestamps();
+            $table->softDeletes();
+            $table->boolean('status')->default(false);
         });
     }
 

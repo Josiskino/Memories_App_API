@@ -12,8 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('reservations', function (Blueprint $table) {
-            $table->id();
+            $table->id(); 
+            $table->date('startDate');   
+            $table->date('endDate');
+            $table->boolean('status');
+            $table->morphs('reservable');
+            $table->foreignIdFor(Tourist::class);
+            $table->boolean('status')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

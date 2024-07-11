@@ -13,7 +13,14 @@ return new class extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
+            $table->string('roomNumber');
+            $table->string('roomPhoneNumber');
+            $table->string('roomPrice');
+            $table->string('roomPrice');
+            $table->foreignIdFor(ChambreCategory::class);
+            $table->boolean('status')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

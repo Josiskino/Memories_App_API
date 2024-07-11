@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('opinions', function (Blueprint $table) {
             $table->id();
+            $table->text('OpinionContained');
+            $table->integer('OpinionRating');
+            $table->morphs('opinionable');
+            $table->foreignIdFor(Tourist::class);
+            $table->boolean('status')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

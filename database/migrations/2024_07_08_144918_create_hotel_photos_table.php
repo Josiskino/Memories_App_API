@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('hotel_photo', function (Blueprint $table) {
             $table->id();
+            $table->string('isPrimary');    
+            $table->string('hotelPhotoUrl');
+            $table->morphs('hotelPhotoable');
+            $table->boolean('status')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

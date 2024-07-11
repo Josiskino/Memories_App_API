@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('type_notices', function (Blueprint $table) {
             $table->id();
+            $table->string('typeName');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

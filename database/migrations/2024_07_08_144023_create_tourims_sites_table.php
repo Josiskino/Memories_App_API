@@ -13,7 +13,16 @@ return new class extends Migration
     {
         Schema::create('tourims_sites', function (Blueprint $table) {
             $table->id();
+            $table->string('tourismeSiteName');
+            $table->string('tourismeSiteCity');
+            $table->text('tourismeSiteDescription');
+            $table->float('tourismeSiteEnterPrice');
+            $table->string('tourismeSiteWebSite');
+            $table->string('tourismeSitePhoneNumber');
+            //longitude et latitude
             $table->timestamps();
+            $table->softDeletes();
+            $table->boolean('status')->default(false);
         });
     }
 
