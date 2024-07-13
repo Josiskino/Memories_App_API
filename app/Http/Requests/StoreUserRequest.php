@@ -54,7 +54,7 @@ class StoreUserRequest extends FormRequest
      * Gérer une validation échouée.
      *
      * @param  \Illuminate\Contracts\Validation\Validator  $validator
-     * @return void
+     * @return void 
      *
      * @throws \Illuminate\Http\Exceptions\HttpResponseException
      */

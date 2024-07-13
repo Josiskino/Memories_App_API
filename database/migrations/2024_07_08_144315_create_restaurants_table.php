@@ -18,7 +18,7 @@ return new class extends Migration
             //prevoir la longitude et la latitude
             $table->timestamps();
             $table->softDeletes();
-            $table->boolean('status')->default(false);
+            $table->integer('status');
         });
     }
 

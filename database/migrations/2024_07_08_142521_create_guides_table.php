@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('guideAddress');
             $table->string('guideImage');
             $table->text('guideDescription');
-            $table->boolean('status')->default(false);
+            $table->integer('status')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

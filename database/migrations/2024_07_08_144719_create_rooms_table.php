@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\RoomCategory;
 
 return new class extends Migration
 {
@@ -16,9 +17,8 @@ return new class extends Migration
             $table->string('roomNumber');
             $table->string('roomPhoneNumber');
             $table->string('roomPrice');
-            $table->string('roomPrice');
-            $table->foreignIdFor(ChambreCategory::class);
-            $table->boolean('status')->default(false);
+            $table->foreignIdFor(RoomCategory::class);
+            $table->integer('status');
             $table->timestamps();
             $table->softDeletes();
         });

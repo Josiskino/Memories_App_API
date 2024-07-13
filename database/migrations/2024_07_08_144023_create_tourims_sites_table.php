@@ -22,7 +22,7 @@ return new class extends Migration
             //longitude et latitude
             $table->timestamps();
             $table->softDeletes();
-            $table->boolean('status')->default(false);
+            $table->integer('status');
         });
     }
 

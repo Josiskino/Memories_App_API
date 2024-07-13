@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('photoUrl');
             $table->morphs('photoable');
-            $table->boolean('status')->default(false);
+            $table->integer('status');
             $table->timestamps();
             $table->softDeletes();
         });

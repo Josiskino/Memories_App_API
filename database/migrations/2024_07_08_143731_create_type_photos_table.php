@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('type_photos', function (Blueprint $table) {
             $table->id();
             $table->string('nameTypePhoto');
-            $table->boolean('status')->default(false);
+            $table->integer('status');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('isPrimary');    
             $table->string('hotelPhotoUrl');
             $table->morphs('hotelPhotoable');
-            $table->boolean('status')->default(false);
+            $table->integer('status');
             $table->timestamps();
             $table->softDeletes();
         });

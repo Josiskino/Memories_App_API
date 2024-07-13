@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Renter;
 
 return new class extends Migration
 {
@@ -17,7 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(Renter::class);
             $table->timestamps();
             $table->softDeletes();
-            $table->boolean('status')->default(false);
+            $table->integer('status');
         });
     }
 

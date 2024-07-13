@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Tourist;
 
 return new class extends Migration
 {
@@ -15,10 +16,9 @@ return new class extends Migration
             $table->id(); 
             $table->date('startDate');   
             $table->date('endDate');
-            $table->boolean('status');
             $table->morphs('reservable');
             $table->foreignIdFor(Tourist::class);
-            $table->boolean('status')->default(false);
+            $table->integer('status');
             $table->timestamps();
             $table->softDeletes();
         });

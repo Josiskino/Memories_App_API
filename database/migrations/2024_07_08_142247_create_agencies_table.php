@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\User;
+
 
 return new class extends Migration
 {
@@ -20,7 +22,8 @@ return new class extends Migration
             $table->string('agencyPhone');
             $table->string('agencyEmail');
             $table->string('agencyLogo');
-            $table->boolean('status')->default(false);
+            $table->integer('status')->default(false);
+            $table->foreignIdFor(User::class);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('type_reservations', function (Blueprint $table) {
             $table->id();
-            $table->string('');
+            $table->string('reservationName');
             $table->timestamps();
             $table->softDeletes();
-            $table->boolean('status')->default(false);
+            $table->integer('status');
         });
     }
 
