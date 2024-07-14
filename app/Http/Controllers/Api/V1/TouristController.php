@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Services\AuthService;
+use App\Http\Resources\TouristResource;
 use Illuminate\Support\Facades\DB;
 use App\Models\Tourist;
+use App\Services\UserEntityService;
 use App\Http\Requests\StoreTouristRequest;
 use App\Http\Requests\UpdateTouristRequest;
 use Illuminate\Http\Request;
@@ -15,10 +17,12 @@ use App\Models\User;
 class TouristController extends Controller
 {
     protected $authService;
+    protected $userEntityService;
 
-    public function __construct(AuthService $authService)
+    public function __construct(UserEntityService $userEntityService, AuthService $authService)
     {
         $this->authService = $authService;
+        $this->userEntityService = $userEntityService;
     }
 
     /**
@@ -26,7 +30,12 @@ class TouristController extends Controller
      */
     public function index()
     {
-        //
+        $tourists = Tourist::all();
+
+        return TouristResource::collection($tourists)->additional([
+            'status_code' => 200,
+            'status_message' => 'Tourists retrieved successfully',
+        ]);
     }
 
     /**
@@ -37,24 +46,28 @@ class TouristController extends Controller
         DB::beginTransaction();
 
         try {
-            
-            $user = $this->authService->createUser($request->all(), 'tourist');
-    
-            $tourist = Tourist::create([
-                'user_id' => $user->id,
-                'touristName' => $request->touristName,
-            ]);
-    
+            $user = $this->userEntityService->createUserEntity(
+                $request->all(),
+                'tourist',
+                Tourist::class,
+                ['touristName' => $request->touristName]
+            );
+
             DB::commit();
-    
-            return response()->json([
+
+            $resource = (new TouristResource($user->tourist))->toArray($request);
+
+            $response = [
                 'status_code' => '201',
                 'status_message' => 'Tourist created successfully',
-                'data' => $tourist,
-            ], 201);
-    
+                'data' => $resource,
+            ];
+
+            return response()->json($response, 201);
+
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'status_code' => '500',
                 'status_message' => 'An error occurred',
@@ -63,18 +76,14 @@ class TouristController extends Controller
         }
     }
 
-    public function login(Request $request){
-
+    public function login(Request $request)
+    {
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        $response = $this->authService->login($request->email, $request->password);
-
-        if ($response['status'] == 200 && !User::where('email', $request->email)->first()->tourist) {
-            $response = ['status' => 401, 'message' => 'Authentication failed'];
-        }
+        $response = $this->authService->loginWithRole($request->email, $request->password, 'tourist');
 
         return response()->json([
             'status_code' => (string)$response['status'],

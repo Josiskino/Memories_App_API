@@ -16,8 +16,7 @@ class Tourist extends Model
 
     protected $fillable = [
         'user_id', 
-        'touristName',
-        
+        'touristName', 
     ];
 
     public function user()

@@ -14,6 +14,8 @@ class Agency extends User
 
     protected $fillable = [
         'user_id', 
+        'agencyName',
+        'agencyResponsibleName'
     ];
 
     public function user()

@@ -17,12 +17,11 @@ return new class extends Migration
             $table->id();
             $table->string('agencyName');
             $table->string('agencyResponsibleName');
-            $table->string('agencyAttestation');
-            $table->string('agencyAddress');
-            $table->string('agencyPhone');
-            $table->string('agencyEmail');
-            $table->string('agencyLogo');
-            $table->integer('status')->default(false);
+            $table->string('agencyAttestation')->nullable();
+            $table->string('agencyAddress')->nullable();
+            $table->string('agencyPhone')->nullable();
+            $table->string('agencyLogo')->nullable();
+            $table->integer('status')->nullable();
             $table->foreignIdFor(User::class);
             $table->timestamps();
             $table->softDeletes();

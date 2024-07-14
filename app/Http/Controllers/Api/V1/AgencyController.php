@@ -3,50 +3,124 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Services\AuthService;
+use App\Http\Resources\AgencyResource;
+use Illuminate\Support\Facades\DB;
 use App\Models\Agency;
+use App\Services\UserEntityService;
 use App\Http\Requests\StoreAgencyRequest;
 use App\Http\Requests\UpdateAgencyRequest;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class AgencyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $userEntityService;
+    protected $authService;
+
+    public function __construct(UserEntityService $userEntityService, AuthService $authService)
+    {
+        $this->userEntityService = $userEntityService;
+        $this->authService = $authService;
+    }
+
     public function index()
     {
-        //
+        $agencies = Agency::all();
+
+        return AgencyResource::collection($agencies)->additional([
+            'status_code' => 200,
+            'status_message' => 'Agencies retrieved successfully',
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreAgencyRequest $request)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $user = $this->userEntityService->createUserEntity(
+                $request->all(),
+                'agency',
+                Agency::class,
+                [
+                    'agencyName' => $request->agencyName,
+                    'agencyResponsibleName' => $request->agencyResponsibleName,
+                ]
+            );
+
+            DB::commit();
+
+            $resource = (new AgencyResource($user->agency))->toArray($request);
+
+            $response = [
+                'status_code' => '201',
+                'status_message' => 'Agency created successfully',
+                'data' => $resource,
+            ];
+
+            return response()->json($response, 201);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status_code' => '500',
+                'status_message' => 'An error occurred',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $response = $this->authService->loginWithRole($request->email, $request->password, 'agency');
+
+        return response()->json([
+            'status_code' => (string)$response['status'],
+            'status_message' => $response['message'],
+            'token' => $response['token'] ?? null,
+            'role' => $response['role'] ?? null,
+        ], $response['status']);
+    }
+
+    public function me(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user) {
+            return response()->json(['user' => $user]);
+        }
+
+        return response()->json(['message' => 'User not authenticated'], 401);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'status_code' => '200',
+            'status_message' => 'Successfully logged out',
+        ], 200);
+    }
+
     public function show(Agency $agency)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateAgencyRequest $request, Agency $agency)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Agency $agency)
     {
         //

@@ -14,6 +14,7 @@ class StoreTouristRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
+        //return auth()->check() && auth()->user()->role === 'tourist';
     }
 
     /**
@@ -26,7 +27,26 @@ class StoreTouristRequest extends FormRequest
         return [
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8',
-            'touristName' => 'required|string|max:255',
+            'touristName' => 'required|string|max:100',
+        ];
+    }
+
+    /**
+     * Personnaliser les messages de validation.
+     *
+     * @return array
+     */
+    public function messages(){
+        return [
+            'email.required' => 'The email address is required.',
+            'email.email' => 'The email address must be a valid email address.',
+            'email.unique' => 'This email address is already in use.',
+            'password.required' => 'The password is required.',
+            'password.min' => 'The password must be at least :min characters long.',
+            'password.confirmed' => 'The password confirmation does not match.',
+            'touristName.required' => 'The tourist name is required.',
+            'touristName.string' => 'The tourist name must be a string.',
+            'touristName.max' => 'The tourist name may not be greater than :max characters.',
         ];
     }
 
