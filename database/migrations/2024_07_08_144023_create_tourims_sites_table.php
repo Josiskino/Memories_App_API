@@ -19,7 +19,8 @@ return new class extends Migration
             $table->float('tourismeSiteEnterPrice');
             $table->string('tourismeSiteWebSite');
             $table->string('tourismeSitePhoneNumber');
-            //longitude et latitude
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->integer('status');

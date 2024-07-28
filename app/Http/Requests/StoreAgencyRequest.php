@@ -29,6 +29,11 @@ class StoreAgencyRequest extends FormRequest
             'password' => 'required|min:8',
             'agencyName' => 'required|string|max:100',
             'agencyResponsibleName'  => 'required|string|max:100',
+            'agencyAttestation' => 'nullable|string|max:255',
+            'agencyAddress' => 'nullable|string|max:255',
+            'agencyPhone' => 'nullable|string|max:255',
+            'agencyLogo' => 'nullable|string|max:255',
+            'status' => 'nullable|integer',
         ];
     }
 

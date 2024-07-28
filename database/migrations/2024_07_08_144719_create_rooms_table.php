@@ -15,8 +15,8 @@ return new class extends Migration
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
             $table->string('roomNumber');
-            $table->string('roomPhoneNumber');
-            $table->string('roomPrice');
+            $table->string('roomPhoneNumber', 8, 2);
+            $table->decimal('roomPrice');
             $table->foreignIdFor(RoomCategory::class);
             $table->integer('status');
             $table->timestamps();

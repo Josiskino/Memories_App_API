@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Hotel;
+use App\Http\Resources\HotelResource;
 use App\Http\Requests\StoreHotelRequest;
 use App\Http\Requests\UpdateHotelRequest;
 use Illuminate\Http\Request;
@@ -15,7 +16,8 @@ class HotelController extends Controller
      */
     public function index()
     {
-        //
+        $hotels = Hotel::all();
+        return HotelResource::collection($hotels);
     }
 
     /**
@@ -23,7 +25,17 @@ class HotelController extends Controller
      */
     public function store(StoreHotelRequest $request)
     {
-        //
+        $validated = $request->validate([
+            'hotelName' => 'required|string|max:255',
+            'hotelCity' => 'required|string|max:255',
+            'hotelEmail' => 'required|email|max:255',
+            'hotelPhone' => 'required|string|max:20',
+            'status' => 'required|integer',
+        ]);
+
+        $hotel = Hotel::create($validated);
+
+        return new HotelResource($hotel);
     }
 
     /**
@@ -31,7 +43,7 @@ class HotelController extends Controller
      */
     public function show(Hotel $hotel)
     {
-        //
+        return new HotelResource($hotel);
     }
 
     /**
@@ -39,7 +51,17 @@ class HotelController extends Controller
      */
     public function update(UpdateHotelRequest $request, Hotel $hotel)
     {
-        //
+        $validated = $request->validate([
+            'hotelName' => 'sometimes|required|string|max:255',
+            'hotelCity' => 'sometimes|required|string|max:255',
+            'hotelEmail' => 'sometimes|required|email|max:255',
+            'hotelPhone' => 'sometimes|required|string|max:20',
+            'status' => 'sometimes|required|integer',
+        ]);
+
+        $hotel->update($validated);
+
+        return new HotelResource($hotel);
     }
 
     /**
@@ -47,6 +69,8 @@ class HotelController extends Controller
      */
     public function destroy(Hotel $hotel)
     {
-        //
+        $hotel->delete();
+
+        return response()->noContent();
     }
 }

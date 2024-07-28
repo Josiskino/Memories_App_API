@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('hotelCity');
             $table->string('hotelEmail');
             $table->string('hotelPhone');
-            //$table->string('hotelPhone');
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->integer('status');

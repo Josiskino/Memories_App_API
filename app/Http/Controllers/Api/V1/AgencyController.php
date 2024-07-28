@@ -57,7 +57,7 @@ class AgencyController extends Controller
             $response = [
                 'status_code' => '201',
                 'status_message' => 'Agency created successfully',
-                'data' => $resource,
+                //'data' => $resource,
             ];
 
             return response()->json($response, 201);
@@ -73,23 +73,6 @@ class AgencyController extends Controller
         }
     }
 
-    public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        $response = $this->authService->loginWithRole($request->email, $request->password, 'agency');
-
-        return response()->json([
-            'status_code' => (string)$response['status'],
-            'status_message' => $response['message'],
-            'token' => $response['token'] ?? null,
-            'role' => $response['role'] ?? null,
-        ], $response['status']);
-    }
-
     public function me(Request $request)
     {
         $user = Auth::user();
@@ -99,16 +82,6 @@ class AgencyController extends Controller
         }
 
         return response()->json(['message' => 'User not authenticated'], 401);
-    }
-
-    public function logout(Request $request)
-    {
-        $request->user()->currentAccessToken()->delete();
-
-        return response()->json([
-            'status_code' => '200',
-            'status_message' => 'Successfully logged out',
-        ], 200);
     }
 
     public function show(Agency $agency)

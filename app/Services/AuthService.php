@@ -3,22 +3,52 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Models\Tourist;
+use App\Models\Agency;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Resources\TouristResource;
+use App\Http\Resources\AgencyResource;
+use Illuminate\Http\Request;
 
 class AuthService
 {
-    public function loginWithRole($email, $password, $role)
+    public function login($email, $password)
     {
         $user = User::where('email', $email)->first();
 
-        if (!$user || !Hash::check($password, $user->password) || $user->role !== $role) {
-            return ['status' => 401, 'message' => 'Authentication failed'];
+        if (!$user || !Hash::check($password, $user->password)) {
+            return [
+                'status_code' => 401,
+                'status_message' => 'Invalid credentials',
+            ];
         }
 
-        $token = $user->createToken($email)->plainTextToken;
+        $role = $user->role;
+      
+        $token = $user->createToken('auth_token')->plainTextToken;
 
-        return ['status' => 200, 'message' => 'Successful authentication', 'token' => $token, 'role' => $user->role];
+        $response = [
+            'status_code' => 200,
+            'status_message' => 'Login successful',
+            'token' => $token,
+        ];
+
+        if ($role === 'tourist') {
+            $tourist = $user->tourist;
+            if ($tourist) {
+                $response['tourist'] = (new TouristResource($tourist))->toArray(new Request());
+            }
+        } elseif ($role === 'agency') {
+            $agency = $user->agency;
+            if ($agency) {
+                $response['agency'] = (new AgencyResource($agency))->toArray(new Request());
+            }
+        }
+
+        return $response;
+        
     }
+
 
     public function createUser($data, $role)
     {

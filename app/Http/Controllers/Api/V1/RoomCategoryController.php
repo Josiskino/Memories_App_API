@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\RoomCategory;
+use App\Http\Resources\RoomCategoryResource;
 use App\Http\Requests\StoreRoomCategoryRequest;
 use App\Http\Requests\UpdateRoomCategoryRequest;
 use Illuminate\Http\Request;
@@ -15,7 +16,8 @@ class RoomCategoryController extends Controller
      */
     public function index()
     {
-        //
+        $roomCategories = RoomCategory::all();
+        return RoomCategoryResource::collection($roomCategories);
     }
 
     /**
@@ -23,7 +25,16 @@ class RoomCategoryController extends Controller
      */
     public function store(StoreRoomCategoryRequest $request)
     {
-        //
+        $validated = $request->validate([
+            'categoryName' => 'required|string|max:255',
+            'categoryDescription' => 'required|string',
+            'hotel_id' => 'required|exists:hotels,id',
+            'status' => 'required|integer',
+        ]);
+
+        $roomCategory = RoomCategory::create($validated);
+
+        return new RoomCategoryResource($roomCategory);
     }
 
     /**
@@ -31,7 +42,7 @@ class RoomCategoryController extends Controller
      */
     public function show(RoomCategory $roomCategory)
     {
-        //
+        return new RoomCategoryResource($roomCategory);
     }
 
     /**
@@ -39,7 +50,16 @@ class RoomCategoryController extends Controller
      */
     public function update(UpdateRoomCategoryRequest $request, RoomCategory $roomCategory)
     {
-        //
+        $validated = $request->validate([
+            'categoryName' => 'sometimes|required|string|max:255',
+            'categoryDescription' => 'sometimes|required|string',
+            'hotel_id' => 'sometimes|required|exists:hotels,id',
+            'status' => 'sometimes|required|integer',
+        ]);
+
+        $roomCategory->update($validated);
+
+        return new RoomCategoryResource($roomCategory);
     }
 
     /**
@@ -47,6 +67,8 @@ class RoomCategoryController extends Controller
      */
     public function destroy(RoomCategory $roomCategory)
     {
-        //
+        $roomCategory->delete();
+
+        return response()->noContent();
     }
 }

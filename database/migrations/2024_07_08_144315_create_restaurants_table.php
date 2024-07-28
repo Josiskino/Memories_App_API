@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('restaurantName');
             $table->string('restaurantCity');
-            //prevoir la longitude et la latitude
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->integer('status');

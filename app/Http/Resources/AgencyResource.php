@@ -16,9 +16,14 @@ class AgencyResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
+            'user' => new UserResource($this->user),
             'agencyName' => $this->agencyName,
             'agencyResponsibleName' => $this->agencyResponsibleName,
+            'agencyAttestation' => $this->agencyAttestation,
+            'agencyAddress' => $this->agencyAddress,
+            'agencyPhone' => $this->agencyPhone,
+            'agencyLogo' => $this->agencyLogo,
+            'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
            

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Restaurant;
 use App\Http\Requests\StoreRestaurantRequest;
 use App\Http\Requests\UpdateRestaurantRequest;
+use App\Http\Resources\RestaurantResource;
 use Illuminate\Http\Request;
 
 class RestaurantController extends Controller
@@ -15,7 +16,8 @@ class RestaurantController extends Controller
      */
     public function index()
     {
-        //
+        $restaurants = Restaurant::paginate(10);
+        return RestaurantResource::collection($restaurants);
     }
 
     /**
@@ -23,7 +25,17 @@ class RestaurantController extends Controller
      */
     public function store(StoreRestaurantRequest $request)
     {
-        //
+        $validated = $request->validate([
+            'restaurantName' => 'required|string|max:255',
+            'restaurantCity' => 'required|string|max:255',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'status' => 'required|integer',
+        ]);
+
+        $restaurant = Restaurant::create($validated);
+
+        return new RestaurantResource($restaurant);
     }
 
     /**
@@ -31,7 +43,7 @@ class RestaurantController extends Controller
      */
     public function show(Restaurant $restaurant)
     {
-        //
+        return new RestaurantResource($restaurant);
     }
 
     /**
@@ -39,7 +51,17 @@ class RestaurantController extends Controller
      */
     public function update(UpdateRestaurantRequest $request, Restaurant $restaurant)
     {
-        //
+        $validated = $request->validate([
+            'restaurantName' => 'sometimes|required|string|max:255',
+            'restaurantCity' => 'sometimes|required|string|max:255',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'status' => 'sometimes|required|integer',
+        ]);
+
+        $restaurant->update($validated);
+
+        return new RestaurantResource($restaurant);
     }
 
     /**
@@ -47,6 +69,8 @@ class RestaurantController extends Controller
      */
     public function destroy(Restaurant $restaurant)
     {
-        //
+        $restaurant->delete();
+
+        return response()->noContent();
     }
 }

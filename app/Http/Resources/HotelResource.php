@@ -3,11 +3,9 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\JsonResponse;
 
-class TouristResource extends JsonResource
+class HotelResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,11 +16,13 @@ class TouristResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => new UserResource($this->user),
-            'touristName' => $this->touristName,
+            'hotelName' => $this->hotelName,
+            'hotelCity' => $this->hotelCity,
+            'hotelEmail' => $this->hotelEmail,
+            'hotelPhone' => $this->hotelPhone,
+            'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
     }
-
 }

@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Models\Agency;
+use App\Models\TourismSite;
 
 return new class extends Migration
 {
@@ -15,7 +16,7 @@ return new class extends Migration
         Schema::create('excursions', function (Blueprint $table) {
             $table->id();
             $table->string('excursionName');
-            $table->text('excursionDescription');
+            $table->text('excursionDescription')->nullable();
             $table->date('excursionDate');
             $table->time('excursionTime');
             $table->String('excursionPlace');
@@ -25,6 +26,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->foreignIdFor(Agency::class);
+            $table->foreignIdFor(TourismSite::class, 'tourism_site_id');
         });
     }
 
