@@ -24,12 +24,12 @@ Route::prefix('V1')->group(function () {
     Route::post('/register/agency', [AgencyController::class, 'store']);
 
     Route::apiResource('tourism-sites', TourismSiteController::class);
-    Route::apiResource('hotels', HotelController::class);
     Route::apiResource('room-categories', RoomCategoryController::class);
     Route::apiResource('reservations', ReservationController::class);
     Route::apiResource('renters', RenterController::class);
     Route::apiResource('restaurants', RestaurantController::class);
     Route::apiResource('excursions', ExcursionController::class);
+    Route::apiResource('hotels', HotelController::class);
     Route::apiResource('participations', ParticipationController::class);
     
     Route::apiResource('photos', PhotoController::class);

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->String('excursionPlace');
             $table->float('excursionPrice');
             $table->integer('excursionMaxParticipants');
-            $table->integer('status'); 
+            $table->integer('status')->default(0); 
             $table->timestamps();
             $table->softDeletes();
             $table->foreignIdFor(Agency::class);

@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('hotel_photo', function (Blueprint $table) {
             $table->id();
-            $table->string('isPrimary');    
+            $table->boolean('is_main')->default(false);    
             $table->string('hotelPhotoUrl');
             $table->morphs('hotelPhotoable');
-            $table->integer('status');
+            $table->integer('status')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

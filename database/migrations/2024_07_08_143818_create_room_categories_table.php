@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('categoryDescription');
             $table->foreignIdFor(Hotel::class);
             $table->timestamps();
-            $table->integer('status');
+            $table->integer('status')->default(0);
             $table->softDeletes();
         });
     }

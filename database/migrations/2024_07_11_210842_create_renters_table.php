@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone_number')->nullable();
             $table->timestamps();
-            $table->integer('status');
+            $table->integer('status')->default(0);
             $table->softDeletes();
         });
     }

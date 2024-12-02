@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('longitude', 10, 7)->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('status');
+            $table->integer('status')->default(0);
         });
     }
 

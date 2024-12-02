@@ -19,7 +19,7 @@ return new class extends Migration
             $table->softDeletes();
             $table->foreignIdFor(Tourist::class);
             $table->foreignIdFor(Excursion::class);
-            $table->integer('status');
+            $table->integer('status')->default(0);
         });
     }
 

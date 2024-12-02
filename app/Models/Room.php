@@ -20,13 +20,13 @@ class Room extends Model
         'status',
     ];
 
-    public function roomCategory()
-    {
-        return $this->belongsTo(RoomCategory::class);
-    }
-
     public function photos()
     {
         return $this->morphMany(HotelPhoto::class, 'hotelPhotoable');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(RoomCategory::class, 'room_category_id');
     }
 }

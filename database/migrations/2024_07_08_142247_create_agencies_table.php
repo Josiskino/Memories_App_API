@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('agencyAddress')->nullable();
             $table->string('agencyPhone')->nullable();
             $table->string('agencyLogo')->nullable();
-            $table->integer('status')->nullable();
+            $table->integer('status')->default(0);
             $table->foreignIdFor(User::class);
             $table->timestamps();
             $table->softDeletes();

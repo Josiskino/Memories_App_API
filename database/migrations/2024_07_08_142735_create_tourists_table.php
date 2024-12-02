@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('touristPassportPlace')->nullable();
             $table->string('touristPassportType')->nullable();
             $table->string('touristPassportImage')->nullable();
-            $table->integer('status')->nullable();
+            $table->integer('status')->default(0);
             $table->foreignIdFor(User::class);
             $table->timestamps();
             $table->softDeletes();

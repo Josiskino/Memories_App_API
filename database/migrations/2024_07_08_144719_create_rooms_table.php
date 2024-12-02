@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('roomPhoneNumber', 8, 2);
             $table->decimal('roomPrice');
             $table->foreignIdFor(RoomCategory::class);
-            $table->integer('status');
+            $table->integer('status')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

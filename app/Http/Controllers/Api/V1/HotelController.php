@@ -8,6 +8,9 @@ use App\Http\Resources\HotelResource;
 use App\Http\Requests\StoreHotelRequest;
 use App\Http\Requests\UpdateHotelRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\JsonResponse;
 
 class HotelController extends Controller
 {
@@ -23,20 +26,60 @@ class HotelController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreHotelRequest $request)
+    public function store(StoreHotelRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'hotelName' => 'required|string|max:255',
-            'hotelCity' => 'required|string|max:255',
-            'hotelEmail' => 'required|email|max:255',
-            'hotelPhone' => 'required|string|max:20',
-            'status' => 'required|integer',
-        ]);
+        try {
+            // Valider les données de la requête
+            $validatedData = $request->validated();
 
-        $hotel = Hotel::create($validated);
+            // Vérifier s'il y a des photos dans la requête
+            if (!$request->hasFile('photos') || !is_array($request->file('photos')) || count($request->file('photos')) === 0) {
+                return response()->json([
+                    'status_code' => 422,
+                    'status_message' => 'At least one photo is required to add a hotel.',
+                ], 422);
+            }
 
-        return new HotelResource($hotel);
+            // Créer l'hôtel
+            $hotel = Hotel::create($validatedData);
+
+            // Récupérer l'indice de la photo principale
+            $mainPhotoIndex = $request->input('main_photo', 0); // Par défaut, on prend la première photo
+
+            // Gérer le téléchargement et l'enregistrement des photos
+            $photos = $request->file('photos');
+            foreach ($photos as $index => $photo) {
+                // Téléchargement et stockage de la photo
+                $path = $photo->store('photos', 'public');
+                $url = Storage::url($path);
+
+                // Créer l'entrée photo associée à l'hôtel
+                $hotel->photos()->create([
+                    'hotelPhotoUrl' => $url,
+                    'is_main' => $index == $mainPhotoIndex ? 1 : 0, // Mettre à 1 seulement pour la photo principale
+                    'status' => 1, // La photo est active par défaut
+                ]);
+            }
+
+            // Charger les photos associées pour les inclure dans la réponse
+            $hotel->load('photos');
+
+            return response()->json([
+                'status_code' => 201,
+                'status_message' => 'Hotel created successfully',
+                'data' => new HotelResource($hotel),
+            ], 201);
+        } catch (\Exception $e) {
+            Log::error('Error creating hotel', ['exception' => $e->getMessage()]);
+
+            return response()->json([
+                'status_code' => 500,
+                'status_message' => 'An error occurred while creating the hotel',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
+
 
     /**
      * Display the specified resource.

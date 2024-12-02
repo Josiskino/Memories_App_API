@@ -32,8 +32,13 @@ class Hotel extends Model
         'deleted_at',
     ];
 
-    public function hotelPhotoable()
+    public function photos()
     {
-        return $this->morphTo();
+        return $this->morphMany(HotelPhoto::class, 'hotelPhotoable');
+    }
+
+    public function roomCategories()
+    {
+        return $this->hasMany(RoomCategory::class);
     }
 }

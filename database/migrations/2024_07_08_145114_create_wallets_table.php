@@ -17,7 +17,7 @@ return new class extends Migration
             $table->float('balance');
             $table->timestamp('lastReloadDate');
             $table->foreignIdFor(Tourist::class);
-            $table->integer('status');
+            $table->integer('status')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('endDate');
             $table->morphs('reservable');
             $table->foreignIdFor(Tourist::class);
-            $table->integer('status');
+            $table->integer('status')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

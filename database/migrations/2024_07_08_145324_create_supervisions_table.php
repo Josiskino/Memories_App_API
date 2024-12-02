@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('supervisions', function (Blueprint $table) {
             $table->id();
             $table->date('dateSupervision');
-            $table->integer('status');
             $table->foreignIdFor(Guide::class);
             $table->foreignIdFor(Tourist::class);
+            $table->integer('status')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

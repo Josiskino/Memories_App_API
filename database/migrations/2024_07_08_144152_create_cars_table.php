@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(Renter::class);
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('status');
+            $table->integer('status')->default(0);
         });
     }
 

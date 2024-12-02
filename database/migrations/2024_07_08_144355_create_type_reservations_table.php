@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('reservationName');
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('status');
+            $table->integer('status')->default(0);
         });
     }
 

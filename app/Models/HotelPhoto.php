@@ -13,7 +13,7 @@ class HotelPhoto extends Model
     protected $table = 'hotel_photo';
 
     protected $fillable = [
-        'isPrimary',
+        'is_main',
         'hotelPhotoUrl',
         'hotelPhotoable_id',
         'hotelPhotoable_type',
