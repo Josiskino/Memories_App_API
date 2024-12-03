@@ -2,32 +2,20 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\Tourist\CreateTouristAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\tourist\StoreTouristRequest;
+use App\Http\Requests\tourist\UpdateTouristRequest;
 use App\Services\AuthService;
 use App\Http\Resources\TouristResource;
-use Illuminate\Support\Facades\DB;
 use App\Models\Tourist;
 use App\Services\UserEntityService;
-use App\Http\Requests\StoreTouristRequest;
-use App\Http\Requests\UpdateTouristRequest;
-use Illuminate\Http\Request;
-use App\Models\User;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class TouristController extends Controller
 {
-    protected $authService;
-    protected $userEntityService;
 
-    public function __construct(UserEntityService $userEntityService, AuthService $authService)
-    {
-        $this->authService = $authService;
-        $this->userEntityService = $userEntityService;
-    }
-
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $tourists = Tourist::all();
@@ -38,77 +26,41 @@ class TouristController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreTouristRequest $request)
+    public function store(StoreTouristRequest $request, CreateTouristAction $createTouristAction)
     {
-        DB::beginTransaction();
-
         try {
-            $user = $this->userEntityService->createUserEntity(
-                $request->all(),
-                'tourist',
-                Tourist::class,
-                ['touristName' => $request->touristName]
+            $result = $createTouristAction->execute(
+                $request->only(['email', 'password']),
+                $request->validated()
             );
 
-            DB::commit();
-
-            $resource = (new TouristResource($user->tourist))->toArray($request);
-
-            $response = [
-                'status_code' => '201',
-                'status_message' => 'Tourist created successfully',
-                //'data' => $resource,
-            ];
-
-            return response()->json($response, 201);
-
+            return response()->json([
+                'status_code' => 201,
+                'message' => 'Tourist created successfully',
+                'tourist' => new TouristResource($result['tourist']),
+            ], 201);
         } catch (\Exception $e) {
-            DB::rollBack();
+            Log::error('Tourist creation error', ['exception' => $e->getMessage()]);
 
             return response()->json([
-                'status_code' => '500',
-                'status_message' => 'An error occurred',
-                'error' => $e->getMessage(),
+                'status_code' => 500,
+                'message' => 'An error occurred during tourist creation',
+                'error' => $e->getMessage()
             ], 500);
         }
     }
 
-    public function me(Request $request){
-
-        $user = Auth::user();
+    public function me()
+    {
+        $user = Auth::user()->tourist;
 
         if ($user) {
-            return response()->json(['user' => $user]);
+            return response()->json([
+                'tourist' => new TouristResource($user),
+                'status_code' => 200
+            ]);
         }
 
         return response()->json(['message' => 'User not authenticated'], 401);
-    }
-
-    
-    /**
-     * Display the specified resource.
-     */
-    public function show(Tourist $tourist)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateTouristRequest $request, Tourist $tourist)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Tourist $tourist)
-    {
-        //
     }
 }

@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\Agency\CreateAgencyAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\agency\StoreAgencyRequest;
+use App\Http\Requests\agency\UpdateAgencyRequest;
 use App\Services\AuthService;
 use App\Http\Resources\AgencyResource;
 use Illuminate\Support\Facades\DB;
 use App\Models\Agency;
 use App\Services\UserEntityService;
-use App\Http\Requests\StoreAgencyRequest;
-use App\Http\Requests\UpdateAgencyRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AgencyController extends Controller
 {
@@ -35,40 +37,26 @@ class AgencyController extends Controller
         ]);
     }
 
-    public function store(StoreAgencyRequest $request)
+    public function store(StoreAgencyRequest $request, CreateAgencyAction $createAgencyAction)
     {
-        DB::beginTransaction();
-
         try {
-            $user = $this->userEntityService->createUserEntity(
-                $request->all(),
-                'agency',
-                Agency::class,
-                [
-                    'agencyName' => $request->agencyName,
-                    'agencyResponsibleName' => $request->agencyResponsibleName,
-                ]
+            $result = $createAgencyAction->execute(
+                $request->only(['email', 'password']),
+                $request->validated()
             );
 
-            DB::commit();
-
-            $resource = (new AgencyResource($user->agency))->toArray($request);
-
-            $response = [
-                'status_code' => '201',
-                'status_message' => 'Agency created successfully',
-                //'data' => $resource,
-            ];
-
-            return response()->json($response, 201);
-
+            return response()->json([
+                'status_code' => 201,
+                'message' => 'Agency created successfully',
+                'data' => $result
+            ], 201);
         } catch (\Exception $e) {
-            DB::rollBack();
+            Log::error('Agency creation error', ['exception' => $e->getMessage()]);
 
             return response()->json([
-                'status_code' => '500',
-                'status_message' => 'An error occurred',
-                'error' => $e->getMessage(),
+                'status_code' => 500,
+                'message' => 'An error occurred during agency creation',
+                'error' => $e->getMessage()
             ], 500);
         }
     }

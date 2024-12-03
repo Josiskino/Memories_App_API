@@ -15,10 +15,26 @@ class Tourist extends Model
     use HasFactory, HasApiTokens, Notifiable, SoftDeletes;
 
     protected $fillable = [
-        'user_id', 
-        'touristName', 
+        'user_id',
+        'touristName',
+        'touristUserName',
+        'touristPhone',
+        'touristAddress',
+        'touristCity',
+        'touristCountry',
+        'touristPostalCode',
+        'touristPassport',
+        'touristPassportCountry',
+        'touristPassportDate',
+        'touristPassportNumber',
+        'touristPassportExpiry',
+        'touristPassportIssue',
+        'touristPassportPlace',
+        'touristPassportType',
+        'touristPassportImage',
+        'status',
     ];
-
+    
     public function user()
     {
         return $this->belongsTo(User::class);

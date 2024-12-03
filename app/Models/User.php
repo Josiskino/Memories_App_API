@@ -56,4 +56,13 @@ class User extends Authenticatable
         return $this->hasOne(Agency::class);
     }
 
+    public function getProfileAttribute()
+    {
+        return match($this->role) {
+            'tourist' => $this->tourist,
+            'agency' => $this->agency,
+            default => null
+        };
+    }
+
 }

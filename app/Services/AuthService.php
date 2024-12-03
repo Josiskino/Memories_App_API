@@ -23,7 +23,7 @@ class AuthService
             ];
         }
 
-        $role = $user->role;
+        $role = $user->role; 
       
         $token = $user->createToken('auth_token')->plainTextToken;
 

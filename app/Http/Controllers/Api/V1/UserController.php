@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\user\UpdateUserRequest;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Support\Facades\Hash;
 use Throwable;
 use Illuminate\Support\Facades\Log;
@@ -36,10 +35,8 @@ class UserController extends Controller
 
             return response()->json($response, $response['status_code']);
         } catch (\Exception $e) {
-            // Log de l'exception pour débogage
             Log::error('An error occurred', ['exception' => $e->getMessage()]);
 
-            // Retourner une réponse d'erreur générique
             return response()->json([
                 'status_code' => '500',
                 'status_message' => 'An error occurred',

@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\HotelController;
 use App\Http\Controllers\Api\V1\UserController;
@@ -12,6 +11,7 @@ use App\Http\Controllers\Api\V1\ReservationController;
 use App\Http\Controllers\Api\V1\ExcursionController;
 use App\Http\Controllers\Api\V1\PhotoController;
 use App\Http\Controllers\Api\V1\AgencyController;
+use App\Http\Controllers\Api\V1\RenterController;
 use App\Http\Controllers\Api\V1\RestaurantController;
 
 

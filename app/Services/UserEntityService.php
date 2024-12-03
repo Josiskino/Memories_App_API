@@ -33,7 +33,7 @@ class UserEntityService
 
         // Crée l'entrée associée dans la table spécifique
         $modelClass::create(array_merge([
-            'user_id' => $user->id,
+            'user_id' => $user->id, 
         ], $additionalData));
 
         return $user;
