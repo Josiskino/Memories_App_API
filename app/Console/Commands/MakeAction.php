@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class MakeAction extends Command
 {
@@ -12,14 +13,14 @@ class MakeAction extends Command
      *
      * @var string
      */
-    protected $signature = 'make:action {name : The name of the action}';
+    protected $signature = 'make:action {name : The name of the action} {--path= : The directory to create the action in (relative to app/Actions)}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new action class';
+    protected $description = 'Create a new action class in a specific directory';
 
     /**
      * Execute the console command.
@@ -29,10 +30,11 @@ class MakeAction extends Command
     public function handle()
     {
         $name = $this->argument('name');
-        $directory = app_path('Actions');
+        $pathOption = $this->option('path');
+        $directory = app_path('Actions' . ($pathOption ? '/' . Str::studly($pathOption) : ''));
         $filePath = $directory . '/' . $name . '.php';
 
-        // Ensure the Actions directory exists
+        // Ensure the specified directory exists
         if (!File::exists($directory)) {
             File::makeDirectory($directory, 0755, true);
         }
@@ -47,7 +49,7 @@ class MakeAction extends Command
         $content = <<<EOD
 <?php
 
-namespace App\Actions;
+namespace App\Actions\\{$this->getNamespace($pathOption)};
 
 class {$name}
 {
@@ -66,8 +68,20 @@ EOD;
 
         // Create the action file
         File::put($filePath, $content);
-        $this->info("The action {$name} has been created successfully.");
+        $this->info("The action {$name} has been created successfully at {$filePath}.");
 
         return Command::SUCCESS;
     }
+
+    /**
+ * Get the namespace based on the provided path.
+ *
+ * @param  string|null  $pathOption
+ * @return string
+ */
+protected function getNamespace(?string $pathOption): string
+{
+    return $pathOption ? str_replace('/', '\\', Str::studly($pathOption)) : '';
+}
+
 }
