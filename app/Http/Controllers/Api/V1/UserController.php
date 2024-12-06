@@ -3,87 +3,66 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\user\UpdateUserRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Throwable;
 use Illuminate\Support\Facades\Log;
-use App\Models\User;
-use App\Services\AuthService;
-
+use App\Actions\User\LoginUserAction;
+use App\Actions\User\LogoutUserAction;
 
 class UserController extends Controller
 {
-    protected $authService;
+    protected $userLoginAction;
+    protected $userLogoutAction;
 
-    public function __construct(AuthService $authService)
+    public function __construct(LoginUserAction $userLoginAction, LogoutUserAction $userLogoutAction)
     {
-        $this->authService = $authService;
+        $this->userLoginAction = $userLoginAction;
+        $this->userLogoutAction = $userLogoutAction;
     }
 
     public function login(Request $request)
     {
         try {
-            
             $request->validate([
                 'email' => 'required|email',
                 'password' => 'required',
             ]);
 
-            // Appel du service d'authentification
-            $response = $this->authService->login($request->email, $request->password);
+            $response = $this->userLoginAction->execute($request->only(['email', 'password']));
 
             return response()->json($response, $response['status_code']);
         } catch (\Exception $e) {
-            Log::error('An error occurred', ['exception' => $e->getMessage()]);
+            Log::error('Erreur de connexion', ['exception' => $e->getMessage()]);
 
             return response()->json([
-                'status_code' => '500',
-                'status_message' => 'An error occurred',
+                'status_code' => 500,
+                'status_message' => 'Une erreur est survenue lors de la connexion',
             ], 500);
         }
     }
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        try {
+            $response = $this->userLogoutAction->execute($request);
 
-        return response()->json([
-            'status_code' => '200',
-            'status_message' => 'Successfully logged out',
-        ], 200);
+            return response()->json($response, $response['status_code']);
+        } catch (\Exception $e) {
+            Log::error('Erreur de déconnexion', ['exception' => $e->getMessage()]);
+
+            return response()->json([
+                'status_code' => 500,
+                'status_message' => 'Une erreur est survenue lors de la déconnexion',
+            ], 500);
+        }
     }
 
-    /**
-     * Display a listing of the resource.
-     */
+    // Les autres méthodes restent inchangées
     public function index()
     {
         //
     }
 
-    
-
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateUserRequest $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
     {
         //
     }

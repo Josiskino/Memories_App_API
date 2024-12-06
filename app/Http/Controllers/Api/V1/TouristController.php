@@ -6,10 +6,8 @@ use App\Actions\Tourist\CreateTouristAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\tourist\StoreTouristRequest;
 use App\Http\Requests\tourist\UpdateTouristRequest;
-use App\Services\AuthService;
 use App\Http\Resources\TouristResource;
 use App\Models\Tourist;
-use App\Services\UserEntityService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 

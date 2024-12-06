@@ -31,7 +31,12 @@ class CreateAgencyAction
             $agency = Agency::create(array_merge([
                 'user_id' => $user->id,
                 'agencyName' => $agencyData['agencyName'] ?? null,
-                'status' => $agencyData['status'] ?? 'pending'
+                'agencyResponsibleName' => $agencyData['agencyResponsibleName'] ?? null,
+                'agencyAttestation' => $agencyData['agencyAttestation'] ?? null,
+                'agencyAddress' => $agencyData['agencyAddress'] ?? null,
+                'agencyPhone' => $agencyData['agencyPhone'] ?? null,
+                'agencyLogo' => $agencyData['agencyLogo'] ?? null,
+                'status' => $agencyData['status'] ?? 0,
             ], $agencyData));
 
             return [

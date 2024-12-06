@@ -18,14 +18,6 @@ use Illuminate\Support\Facades\Log;
 
 class AgencyController extends Controller
 {
-    protected $userEntityService;
-    protected $authService;
-
-    public function __construct(UserEntityService $userEntityService, AuthService $authService)
-    {
-        $this->userEntityService = $userEntityService;
-        $this->authService = $authService;
-    }
 
     public function index()
     {
@@ -48,7 +40,7 @@ class AgencyController extends Controller
             return response()->json([
                 'status_code' => 201,
                 'message' => 'Agency created successfully',
-                'data' => $result
+                'agency' => new AgencyResource($result['agency']),
             ], 201);
         } catch (\Exception $e) {
             Log::error('Agency creation error', ['exception' => $e->getMessage()]);
