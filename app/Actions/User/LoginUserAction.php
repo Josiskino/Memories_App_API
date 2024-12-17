@@ -47,11 +47,14 @@ class LoginUserAction
                 break;
         }
 
+        $userData = $specificResource->toArray();
+        $userData['email'] = $user->email;
+
         return [
             'status_code' => 200,
             'status_message' => 'Connexion réussie',
             'token' => $token,
-            'user' => $specificResource,
+            'user' => $userData,
         ];
     }
 }

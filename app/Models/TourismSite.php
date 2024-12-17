@@ -24,7 +24,11 @@ class TourismSite extends Model
         'latitude',
         'longitude',
         'status',
-    ];
+        'rating',
+        'opening_time',
+        'closing_time',
+        'tourism_category_id',
+    ];    
 
     protected $casts = [
         'tourismeSiteEnterPrice' => 'float',
@@ -39,9 +43,19 @@ class TourismSite extends Model
         'deleted_at',
     ];
 
+    public function mainPhoto()
+    {
+        return $this->photos()->where('is_main', true)->first();
+    }
+
     public function excursions()
     {
         return $this->hasMany(Excursion::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(TourismCategory::class, 'category_id');
     }
 
     public function photos()

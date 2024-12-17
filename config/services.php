@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'paygate' => [
+        'auth_token' => env('PAYGATE_AUTH_TOKEN', '38710af9-f48a-460f-9cc8-17ee424b7b34'),
+    ],
+
 ];

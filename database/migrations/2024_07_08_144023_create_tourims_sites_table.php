@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\TourismCategory;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->decimal('longitude', 10, 7)->nullable();
             $table->timestamps();
             $table->softDeletes();
+            $table->foreignIdFor(TourismCategory::class)->nullable()->constrained()->nullOnDelete();
             $table->integer('status')->default(0);
         });
     }

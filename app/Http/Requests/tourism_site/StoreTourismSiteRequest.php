@@ -34,8 +34,13 @@ class StoreTourismSiteRequest extends FormRequest
             'photos' => 'required|array',
             'photos.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:9048',
             'main_photo' => 'required|integer|min:0',
+            'rating' => 'nullable|numeric|between:0,5',
+            'opening_time' => 'nullable|date_format:H:i',
+            'closing_time' => 'nullable|date_format:H:i',
+            'tourism_category_id' => 'required|integer|exists:tourism_categories,id',
         ];
     }
+
 
     public function messages()
     {

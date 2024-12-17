@@ -11,7 +11,7 @@ class StoreTransactionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,12 @@ class StoreTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'reservation_id' => 'required|exists:reservations,id',
+            //'amount'         => 'required|numeric|min:1',
+            'network'        => 'required|string|in:FLOOZ,TMONEY',
+            'phone_number'   => 'required|string',
+            //'identifier'     => 'required|string|unique:transactions,identifier',
+            'transaction_details' => 'nullable|string',
         ];
     }
 }

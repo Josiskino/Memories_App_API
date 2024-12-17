@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('tourism_categories', function (Blueprint $table) {
             $table->id();
-            $table->integer('status')->default(0); 
-            $table->timestamps();
-            $table->softDeletes();
+            $table->string('categoryName'); 
+            $table->text('categoryDescription')->nullable(); 
+            $table->timestamps(); 
+            $table->softDeletes(); 
         });
     }
 
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('tourism_categories');
     }
 };

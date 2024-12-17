@@ -13,9 +13,11 @@ class Reservation extends Model
     protected $fillable = [
         'startDate',
         'endDate',
+        'amount',
         'reservable_type',
         'reservable_id',
         'tourist_id',
+        'reservationTime',
         'status',
     ];
 
@@ -32,8 +34,23 @@ class Reservation extends Model
         return $this->morphTo();
     }
 
+    public function getReservableTypeAttribute($value)
+    {
+        $map = [
+            'App\\Models\\TourismSite' => 'tourism_site',
+            'App\\Models\\Hotel' => 'hotel',
+        ];
+
+        return $map[$value] ?? $value;
+    }
+
     public function tourist()
     {
         return $this->belongsTo(Tourist::class);
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class); 
     }
 }

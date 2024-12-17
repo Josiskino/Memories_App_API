@@ -2,70 +2,40 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\TourismSite\CreateTourismSiteAction;
+use App\Actions\TourismSite\ListTourismSitesAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\tourism_site\StoreTourismSiteRequest;
+use App\Http\Requests\tourism_site\UpdateTourismSiteRequest;
 use App\Models\TourismSite;
-use App\Http\Requests\StoreTourismSiteRequest;
-use App\Http\Requests\UpdateTourismSiteRequest;
 use App\Http\Resources\TourismSiteResource;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Storage;
+
 
 class TourismSiteController extends Controller
 {
+
+    private ListTourismSitesAction $listAction;
+    private CreateTourismSiteAction $createAction;
+
+    public function __construct(
+        ListTourismSitesAction $listAction,
+        CreateTourismSiteAction $createAction
+    ) {
+        $this->listAction = $listAction;
+        $this->createAction = $createAction;
+    }
     
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $tourismSites = TourismSite::paginate(8);
-        return TourismSiteResource::collection($tourismSites);
+        return $this->listAction->execute();
     }
 
-    
-    public function store(StoreTourismSiteRequest $request): JsonResponse
+    public function store(StoreTourismSiteRequest $request)
     {
-        // Créer le site touristique
-        $tourismSite = TourismSite::create($request->validated());
-
-        // Vérifier s'il y a des photos dans la requête
-        if (!$request->hasFile('photos') || !is_array($request->file('photos')) || count($request->file('photos')) === 0) {
-            return response()->json([
-                'status_code' => 422,
-                'status_message' => 'At least one photo is required to add a tourism site.',
-            ], 422);
-        }
-
-        // Récupérer l'indice de la photo principale
-        $mainPhotoIndex = $request->input('main_photo', 0); // Par défaut, on prend la première photo
-
-        $photos = $request->file('photos');
-        foreach ($photos as $index => $photo) {
-            // Téléchargement et stockage de la photo
-            $path = $photo->store('photos', 'public');
-            $url = Storage::url($path);
-
-            // Créer l'entrée photo associée au site touristique
-            $tourismSite->photos()->create([
-                'photoUrl' => $url,
-                'is_main' => ($index == $mainPhotoIndex),
-                'status' => 1, // La photo est active par défaut
-            ]);
-        }
-
-        // Mettre à jour le statut du site touristique à 1 (publié)
-        $tourismSite->status = 1;
-        $tourismSite->save();
-
-        // Charger les photos associées pour les inclure dans la réponse
-        $tourismSite->load('photos');
-
-        return response()->json([
-            'status_code' => 201,
-            'status_message' => 'Tourism site created successfully',
-            'data' => $tourismSite,
-        ], 201);
+        return $this->createAction->execute($request);
     }
 
     /**

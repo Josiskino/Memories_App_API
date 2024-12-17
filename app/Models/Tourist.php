@@ -44,4 +44,14 @@ class Tourist extends Model
     {
         return $this->hasMany(Participation::class);
     }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class); 
+    }
+
+    public function transactions()
+    {
+        return $this->hasManyThrough(Transaction::class, Reservation::class); 
+    }
 }
