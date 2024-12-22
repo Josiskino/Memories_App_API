@@ -23,5 +23,5 @@ class ListReservationsAction
         return Reservation::where('tourist_id', $touristId)
             ->orderBy('created_at', 'desc') 
             ->paginate($perPage);
-    }
+    } 
 }
