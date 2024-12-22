@@ -29,6 +29,7 @@ class StoreReservationRequest extends FormRequest
             'startDate' => ['required', 'date', 'after_or_equal:today'],
             'endDate' => ['nullable', 'date', 'after_or_equal:startDate'],
             'reservable_type' => 'required|string|in:tourism_site,hotel',
+            'number_of_persons' => 'required|integer',
             //'reservable_type' => 'required|string|in:App\\Models\\TourismSite,App\\Models\\Hotel', 
             //'reservable_id' => 'required|integer|exists:tourims_sites,id', 
             'reservable_id' => 'required|integer',

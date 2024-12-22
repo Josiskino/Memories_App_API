@@ -19,8 +19,9 @@ class ListReservationsAction
         // Récupérer l'ID de l'utilisateur connecté
         $touristId = Auth::id();
 
-        // Filtrer les réservations de l'utilisateur connecté
+        // Filtrer les réservations de l'utilisateur connecté et les trier par ordre décroissant
         return Reservation::where('tourist_id', $touristId)
+            ->orderBy('created_at', 'desc') 
             ->paginate($perPage);
     }
 }

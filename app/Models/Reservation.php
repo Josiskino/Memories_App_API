@@ -14,6 +14,7 @@ class Reservation extends Model
         'startDate',
         'endDate',
         'amount',
+        'number_of_persons',
         'reservable_type',
         'reservable_id',
         'tourist_id',

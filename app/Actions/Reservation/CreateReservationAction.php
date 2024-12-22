@@ -28,13 +28,17 @@ class CreateReservationAction
         // Récupérer l'ID de l'utilisateur connecté
         $touristId = Auth::id();
 
+        // Vérifiez si endDate est présent avant de l'utiliser
+        $endDate = $data['endDate'] ?? null;
+
         return Reservation::create([
             'startDate' => $data['startDate'],
-            'endDate' => $data['endDate'],
+            'endDate' => $endDate,
             'amount' => $data['amount'],
+            'number_of_persons' => $data['number_of_persons'],
             'reservable_type' => $reservableTypes[$data['reservable_type']],
             'reservable_id' => $data['reservable_id'],
-            'tourist_id' => $touristId, 
+            'tourist_id' => $touristId,
             'status' => $data['status'] ?? 0,
             'reservationTime' => $data['reservationTime'] ?? null,
         ]);
